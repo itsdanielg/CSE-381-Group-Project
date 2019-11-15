@@ -12,6 +12,8 @@ public class CameraController : MonoBehaviour {
     private float mouseX, mouseY;
     private float minViewAngle = -70;
     private float maxViewAngle = 20;
+    private float yAngle;
+    private float xAngle;
 
     // Start is called before the first frame update
     void Start() {
@@ -42,8 +44,8 @@ public class CameraController : MonoBehaviour {
             pivot.rotation = Quaternion.Euler(360f + minViewAngle, 0, 0);
         }
 
-        float yAngle = pivot.eulerAngles.y;
-        float xAngle = pivot.eulerAngles.x;
+        yAngle = pivot.eulerAngles.y;
+        xAngle = pivot.eulerAngles.x;
         Quaternion rotation = Quaternion.Euler(xAngle, yAngle, 0);
         transform.position = target.position - (rotation * offset);
         transform.LookAt(lookAt);
