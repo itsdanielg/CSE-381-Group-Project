@@ -21,7 +21,12 @@ ModelImporter:
   - first:
       74: -2341027594253812581
     second: Roll
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Skin
+    second: {fileID: 2100000, guid: 4c3b785b344bdf04ba4c04f283fbf6d0, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

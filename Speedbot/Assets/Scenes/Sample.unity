@@ -248,7 +248,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
   animator: {fileID: 1154805934}
-  pivot: {fileID: 0}
   playerModel: {fileID: 1154805932}
   lookAt: {fileID: 429260320}
   bullet: {fileID: 566779179}
@@ -349,7 +348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.6509434, b: 0.000014278124, a: 1}
+  m_Color: {r: 0, g: 0.627451, b: 0.000014278124, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -779,7 +778,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.6509434, b: 0.000014278124, a: 1}
+  m_Color: {r: 0, g: 0.627451, b: 0.000014278124, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -830,7 +829,7 @@ Transform:
   m_GameObject: {fileID: 566779179}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -50, z: 0}
-  m_LocalScale: {x: 0.20000002, y: 0.20000002, z: 0.20000002}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -1035,7 +1034,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.6509434, b: 0.000014278124, a: 1}
+  m_Color: {r: 0, g: 0.627451, b: 0.000014278124, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1341,7 +1340,6 @@ MonoBehaviour:
   player: {fileID: 8857543}
   lookAt: {fileID: 429260320}
   zoomOut: 10
-  lookAtOffset: 9
   mouseSensitivity: 1.5
 --- !u!1 &1093408300
 GameObject:
@@ -1868,7 +1866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.6509434, b: 0.000014278124, a: 1}
+  m_Color: {r: 0, g: 0.627451, b: 0.000014278124, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

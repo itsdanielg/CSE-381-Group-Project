@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
@@ -30,11 +31,13 @@ public class PlayerController : MonoBehaviour {
     private bool isRunning;
     private bool isJumping;
     private bool isLongJumping;
+    private bool isDoubleJumping;
     private bool isRolling;
     private bool isReeling;
     private float rollTime;
     private float rollDuration;
     private float finalSpeed;
+    private int currentJump = 0;
 
     private bool hookPlaced;
 
@@ -57,8 +60,8 @@ public class PlayerController : MonoBehaviour {
         }
         if (Input.GetMouseButtonDown(1)) {
             crosshair.SetActive(!crosshair.activeSelf);
-            
         }
+        updateCrosshair();
         if (Input.mouseScrollDelta.y < - 1 && hookPlaced) {
             isReeling = true;
         }
@@ -74,7 +77,6 @@ public class PlayerController : MonoBehaviour {
             // Rotate player based on camera direction if moving
             updateRotation();
         }
-        
         // Update model animations
         updateAnimation();
     }
@@ -125,6 +127,9 @@ public class PlayerController : MonoBehaviour {
         else {
             finalSpeed = walkSpeed;
         }
+        if (crosshair.activeSelf) {
+            finalSpeed *= 0.7f;
+        }
         moveDirection *= finalSpeed;
         // Event for character rolling
         if (isRolling) {
@@ -150,12 +155,22 @@ public class PlayerController : MonoBehaviour {
         if (controller.isGrounded) {
             isJumping = false;
             isLongJumping = false;
+            isDoubleJumping = false;
             moveDirection.y = 0;
-            if (Input.GetButton("Jump")) {
+            currentJump = 0;
+        }
+        if (Input.GetButtonDown("Jump")) {
+            if (currentJump == 1) {
+                currentJump++;
+                moveDirection.y = jumpHeight;
+            }
+            else if (controller.isGrounded) {
                 isIdle = false;
                 isJumping = true;
                 moveDirection.y = jumpHeight;
+                currentJump++;
             }
+            
         }
         // Apply gravity and move player based on inputs
         moveDirection.y += gravity * Time.deltaTime;
@@ -178,6 +193,22 @@ public class PlayerController : MonoBehaviour {
         animator.SetBool("isGrounded", controller.isGrounded);
         animator.SetBool("isRolling", isRolling);
     }
+    
+    void updateCrosshair() {
+        if (crosshair.activeSelf) {
+            Image[] children = crosshair.GetComponentsInChildren<Image>();
+            if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, hookRange)) {
+                for (int i = 0; i < 4; i++) {
+                    children[i].color = Color.green;
+                }
+            }
+            else {
+                for (int i = 0; i < 4; i++) {
+                    children[i].color = Color.red;
+                }
+            }
+        }
+    }
 
     void shootEvent() {
         if (!isReeling) {
@@ -190,8 +221,6 @@ public class PlayerController : MonoBehaviour {
     }
 
     void reelEvent() {
-        //controller.Move(new Vector3(0, 0, 0));
-        //controller.transform.position = hit.point;
         float step =  hookTravelSpeed * Time.deltaTime;
         float distance = Vector3.Distance(controller.transform.position, bullet.transform.position);
         if (distance > 1) {
