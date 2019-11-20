@@ -4,53 +4,36 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
 
-    public Transform target, pivot, lookAt;
-    public Vector3 offset;
-    public bool useOffset;
-    public float rotationSpeed;
+    public Transform player, lookAt;
+    public float zoomOut;
+    public float mouseSensitivity;
 
-    private float mouseX, mouseY;
-    private float minViewAngle = -70;
-    private float maxViewAngle = 20;
-    private float yAngle;
-    private float xAngle;
+    private Vector3 eulerRotation;
 
+    private float lookAtOffset = 3;
+    private float minViewAngle = -80;
+    private float maxViewAngle = 60;
+    
     // Start is called before the first frame update
     void Start() {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        if (useOffset) {
-            offset = target.position - transform.position;
-        }
-        pivot.transform.position = target.transform.position;
-        pivot.transform.parent = null;
     }
 
     void LateUpdate() {
 
-        pivot.transform.position = target.transform.position;
+        lookAt.position = player.position + new Vector3(0, lookAtOffset, 0);
 
-        mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
-        mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
-        //mouseY = Mathf.Clamp(mouseY, -70, 50);
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
-        pivot.Rotate(0, mouseX, 0);
-        pivot.Rotate(-mouseY, 0, 0);
+        eulerRotation.x += mouseX;
+        eulerRotation.y -= mouseY;
+        eulerRotation.y = Mathf.Clamp(eulerRotation.y, minViewAngle, maxViewAngle);
 
-        if (pivot.rotation.eulerAngles.x > maxViewAngle && pivot.rotation.eulerAngles.x < 180f) {
-            pivot.rotation = Quaternion.Euler(maxViewAngle, 0, 0);
-        }
-        if (pivot.rotation.eulerAngles.x > 180 && pivot.rotation.eulerAngles.x < 360f + minViewAngle) {
-            pivot.rotation = Quaternion.Euler(360f + minViewAngle, 0, 0);
-        }
-
-        yAngle = pivot.eulerAngles.y;
-        xAngle = pivot.eulerAngles.x;
-        Quaternion rotation = Quaternion.Euler(xAngle, yAngle, 0);
-        transform.position = target.position - (rotation * offset);
-        transform.LookAt(lookAt);
-
+        Quaternion rotation = Quaternion.Euler(eulerRotation.y, eulerRotation.x, 0);
+        lookAt.rotation = Quaternion.Lerp(lookAt.rotation, rotation, 1);
+        transform.localPosition = new Vector3(0f, 0f, Mathf.Lerp(transform.localPosition.z, -zoomOut, Time.deltaTime));
         
-        // Player.rotation = Quaternion.Euler(0, mouseX, 0);
     }
 }

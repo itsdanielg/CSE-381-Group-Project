@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour {
 
     public CharacterController controller;
     public Animator animator;
-    public Transform pivot;
     public GameObject playerModel;
     public Transform lookAt;
 
@@ -166,7 +165,7 @@ public class PlayerController : MonoBehaviour {
     // Method for updating player rotation
     void updateRotation() {
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0) {
-            transform.rotation = Quaternion.Euler(0f, pivot.rotation.eulerAngles.y, 0f);
+            transform.rotation = Quaternion.Euler(0f, lookAt.rotation.eulerAngles.y, 0f);
             Quaternion newRotation = Quaternion.LookRotation(new Vector3(moveDirection.x, 0f, moveDirection.z));
             playerModel.transform.rotation = Quaternion.Slerp(playerModel.transform.rotation, newRotation, rotationSpeed * Time.deltaTime);
         }
