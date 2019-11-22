@@ -5,24 +5,31 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
+    private const float WALK_ANIMATION_SPEED = 1.5f;
+    private const float RUN_ANIMATION_SPEED = 2.0f;
+    private const float ROLL_MAX_DURATION = 0.5f;
+    private const float ROTATION_SPEED = 20.0f;
+    private const float WALK_SPEED = 4.0f;
+    private const float RUN_SPEED = 8.0f;
+    private const float CROSSHAIR_SPEED_MULTIPLIER = 0.7f;
+    private const float ROLL_SPEED_MULTIPLIER = 1.4f;
+    private const float JUMP_HEIGHT = 20.0f;
+    private const float DOUBLE_JUMP_HEIGHT_MULTIPLIER = 0.8f;
+    private const float GRAVITY = -40.0f;
+    private const float HOOK_SENSITIVITY = 1.0f;
+    private const int MAX_JUMPS = 2;
+
     public CharacterController controller;
-    public Animator animator;
     public GameObject playerModel;
-    public Transform lookAt;
-
-    public GameObject bullet;
+    public Animator animator;
     public Camera camera;
+    public Transform lookAt;
     public GameObject crosshair;
+    public GameObject bullet;
 
-    public float walkSpeed;
-    public float runningSpeed;
-    public float speedMultiplier;
-    public float jumpHeight;
-    public float gravity;
-    public float rotationSpeed;
     public float hookRange;
-    public float hookTravelSpeed = 8.0f;
-    public float hookSensitivity = 0.5f;
+    public float hookTravelSpeed;
+    
 
     private Vector3 moveDirection;
     private RaycastHit hit;
@@ -30,84 +37,89 @@ public class PlayerController : MonoBehaviour {
     private bool isIdle;
     private bool isRunning;
     private bool isJumping;
-    private bool isLongJumping;
-    private bool isDoubleJumping;
     private bool isRolling;
     private bool isReeling;
-    private float rollTime;
-    private float rollDuration;
-    private float finalSpeed;
-    private int currentJump = 0;
-
     private bool hookPlaced;
+    private float finalSpeed;
+    private float rollCurrentDuration;
+    private int currentJump;
 
-    // Start is called before the first frame update
+    ////////////////////////////////////////////////// START //////////////////////////////////////////////////
     void Start() {
         controller = GetComponent<CharacterController>();
-        initVar();
-
         crosshair.SetActive(false);
         bullet.SetActive(false);
-        hookPlaced = false;
+        initVar();
     }
 
-    // Update is called once per frame
+    ////////////////////////////////////////////////// UDPATE //////////////////////////////////////////////////
     void Update() {
+
+        // GET LEFT MOUSE CLICK EVENT
         if (Input.GetMouseButtonDown(0)) {
-            if (crosshair.activeSelf) {
-                shootEvent();
-            }
+            shootEvent();
         }
+        // GET RIGHT MOUSE CLICK EVENT
         if (Input.GetMouseButtonDown(1)) {
             crosshair.SetActive(!crosshair.activeSelf);
         }
-        updateCrosshair();
-        if (Input.mouseScrollDelta.y < - 1 && hookPlaced) {
+        // GET MOUSE WHEEL EVENT ONLY IF HOOK IS PLACED AND WHEEL IS SCROLLED QUICKLY
+        if ((Input.mouseScrollDelta.y < -HOOK_SENSITIVITY || Input.mouseScrollDelta.y > HOOK_SENSITIVITY) && hookPlaced) {
             isReeling = true;
         }
-        // Check if player is already reeling
+        // THEN CONTINOUSLY UPDATE CROSSHAIR
+        updateCrosshair();
+
+        // SET REEL EVENT AND DISABLE USER INPUT IF PLAYER IS CURRENTLY REELING
         if (isReeling) {
             moveDirection = new Vector3(0, 0, 0);
             controller.Move(moveDirection);
             reelEvent();
         }
+        // ELSE LISTEN TO USER INPUT
         else {
-            // Update player movement
-            updateMovement();
-            // Rotate player based on camera direction if moving
-            updateRotation();
+            updateMovement();       // UPDATE PLAYER MOVEMENT
+            updateRotation();       // ROTATE MOVING PLAYER BASED ON CAMERA DIRECTION
         }
-        // Update model animations
+
+        // LASTLY UPDATE MODEL ANIMATIONS
         updateAnimation();
+
     }
 
+    ////////////////////////////////////////////////// INIT VAR //////////////////////////////////////////////////
+    // INITATE PRIVATE VARIABLES TO BE USED
     void initVar() {
         isIdle = true;
         isRunning = false;
         isJumping = false;
-        isLongJumping = false;
         isRolling = false;
         isReeling = false;
-        rollTime = 0;
-        rollDuration = 1.0f;
+        hookPlaced = false;
         finalSpeed = 0;
+        rollCurrentDuration = 0;
+        currentJump = 0;
     }
 
+    ////////////////////////////////////////////////// UDPATE MOVEMENT //////////////////////////////////////////////////
+    // UPDATE MOVEMENT INPUTS
     void updateMovement() {
-        // Get direction vectors
+
+        // GET DIRECTION VECTORS (FROM WASD)
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         float jumpVec = moveDirection.y;
         moveDirection = (transform.forward * vertical) + (transform.right * horizontal);
-        // Normalize vector if there is diagnonal movement
+        // NORMALIZE VECTOR IF THERE IS DIAGONAL MOVEMENT
         if (horizontal != 0 && vertical != 0) {
             moveDirection = moveDirection.normalized;
         }
-        // Apply certain key presses only when character is walking
+
+        // APPLY CERTAIN ACTIONS ONLY WHEN CHARACTER IS MOVING
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) {
             isIdle = false;
-            // Run/disable run only when character is grounded
-            if (Input.GetKeyDown(KeyCode.LeftShift) && controller.isGrounded) {
+            // Run/disable run only when character is grounded and not rolling
+            if (Input.GetKeyDown(KeyCode.LeftShift) && controller.isGrounded && !isRolling) {
                 isRunning = !isRunning;
             }
             // Initiate roll only if character is grounded and not already rolling
@@ -115,78 +127,92 @@ public class PlayerController : MonoBehaviour {
                 isRolling = true;
             }
         }
+        // ELSE CHARACTER IS IDLE
         else {
             isIdle = true;
             isRunning = false;
             isRolling = false;
         }
-        // Change speed if player is running
+
+        // CHANGE SPEED IF PLAYER IS RUNNING OR WALKING
         if (isRunning) {
-            finalSpeed = runningSpeed;
+            finalSpeed = RUN_SPEED;
+            animator.SetFloat("runSpeed", RUN_ANIMATION_SPEED);
         }
         else {
-            finalSpeed = walkSpeed;
+            finalSpeed = WALK_SPEED;
+            animator.SetFloat("walkSpeed", WALK_ANIMATION_SPEED);
         }
+        // SLOW DOWN CHRACTER IF CROSSHAIR IS TOGGLED ON
         if (crosshair.activeSelf) {
-            finalSpeed *= 0.7f;
+            finalSpeed *= CROSSHAIR_SPEED_MULTIPLIER;
+            animator.SetFloat("runSpeed", RUN_ANIMATION_SPEED * CROSSHAIR_SPEED_MULTIPLIER);
+            animator.SetFloat("walkSpeed", WALK_ANIMATION_SPEED * CROSSHAIR_SPEED_MULTIPLIER);
         }
-        moveDirection *= finalSpeed;
-        // Event for character rolling
+
+        // DURATION BASED EVENT FOR CHARACTER ROLLING
         if (isRolling) {
-            if (rollTime != 0) {
-                controller.height = 1.0f;
-                controller.center = new Vector3(0, -0.5f, 0);
-            }
-            rollTime += Time.deltaTime;
-            if (rollTime > rollDuration) {
-                controller.height = 2.0f;
-                controller.center = new Vector3(0, 0, 0);
+            controller.height = 1.0f;                                       // LOWER PLAYER HEIGHT WHEN ROLLING
+            controller.center = new Vector3(0, -0.5f, 0);
+            finalSpeed *= ROLL_SPEED_MULTIPLIER;
+            rollCurrentDuration += Time.deltaTime;
+            if (rollCurrentDuration >= ROLL_MAX_DURATION) {
+                controller.height = 2.0f;                                   // RESET PLAYER HEIGHT AFTER ROLLING
+                controller.center = Vector3.zero;
                 isRolling = false;
-                rollTime = 0;
+                rollCurrentDuration = 0;
             }
+            animator.SetFloat("rollSpeed", 1.0f/ROLL_MAX_DURATION);         // CHANGE ANIMATION SPEED BASED ON ROLL DURATION
         }
-        else {
-            controller.height = 2.0f;
-            controller.center = new Vector3(0, 0, 0);
-            rollTime = 0;
-        }
-        // No y velocity when player is grounded & handle jump event
+
+        // UPDATE FINAL CHARACTER SPEED ON HORIZONTAL PLANE
+        moveDirection *= finalSpeed;
+
+        // RESET Y VELOCITY IF CHARACTER IS GROUNDED
         moveDirection.y = jumpVec;
         if (controller.isGrounded) {
             isJumping = false;
-            isLongJumping = false;
-            isDoubleJumping = false;
             moveDirection.y = 0;
             currentJump = 0;
         }
+
+        // LISTEN FOR JUMP AND DOUBLE JUMP INPUTS
         if (Input.GetButtonDown("Jump")) {
-            if (currentJump == 1) {
-                currentJump++;
-                moveDirection.y = jumpHeight;
+            // ONLY JUMP IF PLAYER HAS NOT EXCEED MAX JUMPS
+            if (currentJump < MAX_JUMPS) {
+                // PROCESS DOUBLE JUMP ONLY IF PLAYER IS MID-AIR
+                if (!controller.isGrounded) {
+                    currentJump = 2;
+                    animator.Play("Double Jump");
+                    moveDirection.y = JUMP_HEIGHT * DOUBLE_JUMP_HEIGHT_MULTIPLIER;
+                }
+                // ELSE PROCESS REGULAR JUMP
+                else {
+                    currentJump = 1;
+                    isIdle = false;
+                    isJumping = true;
+                    moveDirection.y = JUMP_HEIGHT;
+                }
             }
-            else if (controller.isGrounded) {
-                isIdle = false;
-                isJumping = true;
-                moveDirection.y = jumpHeight;
-                currentJump++;
-            }
-            
         }
-        // Apply gravity and move player based on inputs
-        moveDirection.y += gravity * Time.deltaTime;
+
+        // FINALLY, APPLY GRAVITY AND MOVE PLAYER BASED ON INPUTS
+        moveDirection.y += GRAVITY * Time.deltaTime;
         controller.Move(moveDirection * Time.deltaTime);
     }
 
-    // Method for updating player rotation
+    ////////////////////////////////////////////////// UDPATE ROTATION //////////////////////////////////////////////////
+    // UPDATE PLAYER MODEL ROTATION
     void updateRotation() {
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0) {
             transform.rotation = Quaternion.Euler(0f, lookAt.rotation.eulerAngles.y, 0f);
             Quaternion newRotation = Quaternion.LookRotation(new Vector3(moveDirection.x, 0f, moveDirection.z));
-            playerModel.transform.rotation = Quaternion.Slerp(playerModel.transform.rotation, newRotation, rotationSpeed * Time.deltaTime);
+            playerModel.transform.rotation = Quaternion.Slerp(playerModel.transform.rotation, newRotation, ROTATION_SPEED * Time.deltaTime);
         }
     }
 
-    // Method for updating model animations
+    ////////////////////////////////////////////////// UDPATE ANIMATION //////////////////////////////////////////////////
+    // UPDATE PLAYER MODEL ANIMATIONS
     void updateAnimation() {
         animator.SetBool("isIdle", isIdle);
         animator.SetBool("isRunning", isRunning);
@@ -194,6 +220,8 @@ public class PlayerController : MonoBehaviour {
         animator.SetBool("isRolling", isRolling);
     }
     
+    ////////////////////////////////////////////////// UDPATE CROSSHAIR //////////////////////////////////////////////////
+    // UPDATE CROSSHAIR COLOR WHEN TARGET IS IN RANGE
     void updateCrosshair() {
         if (crosshair.activeSelf) {
             Image[] children = crosshair.GetComponentsInChildren<Image>();
@@ -210,29 +238,40 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    ////////////////////////////////////////////////// SHOOT EVENT //////////////////////////////////////////////////
+    // SHOOT TARGET IF AND ONLY IF PLAYER IS NOT ROLLING
     void shootEvent() {
-        if (!isReeling) {
-            if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, hookRange)) {
-                hookPlaced = true;
-                bullet.SetActive(true);
-                bullet.transform.position = hit.point;
+        if (crosshair.activeSelf) {
+            if (!isReeling) {
+                if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, hookRange)) {
+                    hookPlaced = true;
+                    bullet.SetActive(true);
+                    bullet.transform.position = hit.point;
+                }
             }
         }
     }
 
+    ////////////////////////////////////////////////// REEL EVENT //////////////////////////////////////////////////
+    // REEL PLAYER ONTO TARGET PLACED
     void reelEvent() {
         float step =  hookTravelSpeed * Time.deltaTime;
         float distance = Vector3.Distance(controller.transform.position, bullet.transform.position);
         if (distance > 1) {
             controller.transform.position = Vector3.MoveTowards(controller.transform.position, bullet.transform.position, step);
             Quaternion newRotation = Quaternion.LookRotation(new Vector3(bullet.transform.position.x, 0f, bullet.transform.position.z));
-            playerModel.transform.rotation = Quaternion.Slerp(playerModel.transform.rotation, newRotation, rotationSpeed * Time.deltaTime * 5);
+            playerModel.transform.rotation = Quaternion.Slerp(playerModel.transform.rotation, newRotation, ROTATION_SPEED * Time.deltaTime * 5);
+            animator.Play("Reel");
+            isIdle = false;
+            isJumping = false;
+            isRolling = false;
         }
         else {
             hookPlaced = false;
             isReeling = false;
             bullet.SetActive(false);
         }
+        
     }
 
 }

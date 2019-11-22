@@ -255,7 +255,8 @@ MonoBehaviour:
   crosshair: {fileID: 433547813}
   walkSpeed: 4
   runningSpeed: 8
-  speedMultiplier: 1.5
+  crosshairSpeedMultiplier: 0.7
+  rollSpeedMultiplier: 1.4
   jumpHeight: 20
   gravity: -40
   rotationSpeed: 10
@@ -1906,7 +1907,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1635877004
 RectTransform:
   m_ObjectHideFlags: 0
