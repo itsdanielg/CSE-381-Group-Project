@@ -19,19 +19,21 @@ public class PlayerController : MonoBehaviour {
     private const float HOOK_SENSITIVITY = 1.0f;
     private const int MAX_JUMPS = 2;
 
-    public CharacterController controller;
+    public static CharacterController controller;
     public GameObject playerModel;
     public Animator animator;
     public Camera camera;
     public Transform lookAt;
     public GameObject crosshair;
     public GameObject bullet;
+    public LineRenderer laser;
 
-    public float hookRange;
+    public static int currentJump;
+    public static float boostMultiplier = 1.0f;
+    public static float hookRange = 70;
     public float hookTravelSpeed;
     
-
-    private Vector3 moveDirection;
+    private static Vector3 moveDirection;
     private RaycastHit hit;
 
     private bool isIdle;
@@ -39,10 +41,9 @@ public class PlayerController : MonoBehaviour {
     private bool isJumping;
     private bool isRolling;
     private bool isReeling;
-    private bool hookPlaced;
+    public static bool hookPlaced;
     private float finalSpeed;
     private float rollCurrentDuration;
-    private int currentJump;
 
     ////////////////////////////////////////////////// START //////////////////////////////////////////////////
     void Start() {
@@ -67,7 +68,9 @@ public class PlayerController : MonoBehaviour {
         if ((Input.mouseScrollDelta.y < -HOOK_SENSITIVITY || Input.mouseScrollDelta.y > HOOK_SENSITIVITY) && hookPlaced) {
             isReeling = true;
         }
-        // THEN CONTINOUSLY UPDATE CROSSHAIR
+        // THEN CONTINOUSLY UPDATE LASER
+        updateLaser();
+        // AND CONTINOUSLY UPDATE CROSSHAIR
         updateCrosshair();
 
         // SET REEL EVENT AND DISABLE USER INPUT IF PLAYER IS CURRENTLY REELING
@@ -85,6 +88,12 @@ public class PlayerController : MonoBehaviour {
         // LASTLY UPDATE MODEL ANIMATIONS
         updateAnimation();
 
+    }
+
+    void OnTriggerEnter(Collider trigger) {
+        if (trigger.CompareTag("TriggerZone")) {
+            trigger.gameObject.SetActive(false);
+        }
     }
 
     ////////////////////////////////////////////////// INIT VAR //////////////////////////////////////////////////
@@ -136,18 +145,18 @@ public class PlayerController : MonoBehaviour {
 
         // CHANGE SPEED IF PLAYER IS RUNNING OR WALKING
         if (isRunning) {
-            finalSpeed = RUN_SPEED;
-            animator.SetFloat("runSpeed", RUN_ANIMATION_SPEED);
+            finalSpeed = RUN_SPEED * boostMultiplier;
+            animator.SetFloat("runSpeed", RUN_ANIMATION_SPEED * boostMultiplier);
         }
         else {
-            finalSpeed = WALK_SPEED;
-            animator.SetFloat("walkSpeed", WALK_ANIMATION_SPEED);
+            finalSpeed = WALK_SPEED * boostMultiplier;
+            animator.SetFloat("walkSpeed", WALK_ANIMATION_SPEED * boostMultiplier);
         }
         // SLOW DOWN CHRACTER IF CROSSHAIR IS TOGGLED ON
         if (crosshair.activeSelf) {
-            finalSpeed *= CROSSHAIR_SPEED_MULTIPLIER;
-            animator.SetFloat("runSpeed", RUN_ANIMATION_SPEED * CROSSHAIR_SPEED_MULTIPLIER);
-            animator.SetFloat("walkSpeed", WALK_ANIMATION_SPEED * CROSSHAIR_SPEED_MULTIPLIER);
+            finalSpeed *= CROSSHAIR_SPEED_MULTIPLIER * boostMultiplier;
+            animator.SetFloat("runSpeed", RUN_ANIMATION_SPEED * CROSSHAIR_SPEED_MULTIPLIER * boostMultiplier);
+            animator.SetFloat("walkSpeed", WALK_ANIMATION_SPEED * CROSSHAIR_SPEED_MULTIPLIER * boostMultiplier);
         }
 
         // DURATION BASED EVENT FOR CHARACTER ROLLING
@@ -247,6 +256,8 @@ public class PlayerController : MonoBehaviour {
                     hookPlaced = true;
                     bullet.SetActive(true);
                     bullet.transform.position = hit.point;
+                    laser = laser.GetComponent<LineRenderer>();
+                    laser.gameObject.SetActive(true);
                 }
             }
         }
@@ -270,8 +281,20 @@ public class PlayerController : MonoBehaviour {
             hookPlaced = false;
             isReeling = false;
             bullet.SetActive(false);
+            laser.gameObject.SetActive(false);
         }
-        
+    }
+
+    void updateLaser() {
+        if (hookPlaced) {
+            laser.SetPosition(0, controller.transform.position);
+            laser.SetPosition(1, bullet.transform.position);
+        }
+    }
+
+    public static void respawnPlayer(Vector3 respawnPos) {
+        moveDirection = Vector3.zero;
+        controller.transform.position = respawnPos;
     }
 
 }

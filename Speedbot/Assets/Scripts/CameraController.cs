@@ -7,9 +7,9 @@ public class CameraController : MonoBehaviour {
     private const float LOOK_AT_Y_OFFSET = 3.0f;
     private const float minViewAngle = -70.0f;
     private const float maxViewAngle = 60.0f;
+    private const float zoomOut = 10;
 
     public Transform player, lookAt;
-    public float zoomOut;
     public float mouseSensitivity;
 
     private Vector3 eulerRotation;
