@@ -1,8 +1,8 @@
-Complete model animations - Partially Completed
-Complete character movement - Partially Completed
+Complete model animations - Completed
+Complete character movement - Completed
 Complete collision detection - Partially Completed
-Complete power ups - Not begun
-Complete main menu - Not begun
-Complete scene transtions - Not begun
-Complete tutorial - Not begun
-Complete levels - Not begun
+Complete power ups - Completed
+Complete main menu - Completed
+Complete scene transtions - Partiall Completed
+Complete tutorial - Completed
+Complete levels - Partially Completed
