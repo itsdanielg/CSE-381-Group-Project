@@ -658,7 +658,7 @@ GameObject:
   - component: {fileID: 44421440}
   m_Layer: 0
   m_Name: Tower Floor (4)
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3232,7 +3232,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Congratulations! You have completed the tutorial!
+  m_text: 'Congratulations! You have completed the tutorial!
+
+
+    Press ENTER to move to the next level...
+
+    Press ESC to return to the main menu...'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 672bc4c7d7db7de4591407fc2d919611, type: 2}
   m_sharedMaterial: {fileID: 3021675201171192113, guid: 672bc4c7d7db7de4591407fc2d919611,
@@ -3302,12 +3307,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 607399491}
-    characterCount: 60
+    characterCount: 131
     spriteCount: 0
-    spaceCount: 10
-    wordCount: 11
+    spaceCount: 22
+    wordCount: 22
     linkCount: 0
-    lineCount: 2
+    lineCount: 4
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -5495,7 +5500,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game Over! You have failed to finish the rest of the tutorial.
+  m_text: 'Game Over! You have failed to finish the rest of the tutorial.
+
+
+    Press ESC to return to the main menu...'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 672bc4c7d7db7de4591407fc2d919611, type: 2}
   m_sharedMaterial: {fileID: 3021675201171192113, guid: 672bc4c7d7db7de4591407fc2d919611,
@@ -5565,12 +5573,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1146774730}
-    characterCount: 60
+    characterCount: 103
     spriteCount: 0
-    spaceCount: 10
-    wordCount: 11
+    spaceCount: 20
+    wordCount: 20
     linkCount: 0
-    lineCount: 2
+    lineCount: 3
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -5870,7 +5878,7 @@ GameObject:
   - component: {fileID: 1216814631}
   m_Layer: 0
   m_Name: Tower
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5962,7 +5970,7 @@ GameObject:
   - component: {fileID: 1371376437}
   m_Layer: 0
   m_Name: Tower Floor (3)
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7322,7 +7330,7 @@ GameObject:
   - component: {fileID: 1918666668}
   m_Layer: 0
   m_Name: Tower
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

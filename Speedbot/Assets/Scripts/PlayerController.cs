@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour {
     public static float hookRange = 70;
     public float hookTravelSpeed;
     
+    public static Vector3 respawnPoint;
     private static Vector3 moveDirection;
     private RaycastHit hit;
 
@@ -83,6 +84,11 @@ public class PlayerController : MonoBehaviour {
         else {
             updateMovement();       // UPDATE PLAYER MOVEMENT
             updateRotation();       // ROTATE MOVING PLAYER BASED ON CAMERA DIRECTION
+        }
+
+        // MANUALLY RESPAWN
+        if (Input.GetKeyDown("r")) {
+            respawnPlayer(respawnPoint);
         }
 
         // LASTLY UPDATE MODEL ANIMATIONS
@@ -234,16 +240,23 @@ public class PlayerController : MonoBehaviour {
     void updateCrosshair() {
         if (crosshair.activeSelf) {
             Image[] children = crosshair.GetComponentsInChildren<Image>();
-            if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, hookRange)) {
-                for (int i = 0; i < 4; i++) {
-                    children[i].color = Color.green;
+                if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, hookRange)) {
+                    if (hit.transform.tag == "Building") {
+                        for (int i = 0; i < 4; i++) {
+                            children[i].color = Color.green;
+                        }
+                    }
+                    else {
+                        for (int i = 0; i < 4; i++) {
+                            children[i].color = Color.red;
+                        }
+                    }
                 }
-            }
-            else {
-                for (int i = 0; i < 4; i++) {
-                    children[i].color = Color.red;
+                else {
+                    for (int i = 0; i < 4; i++) {
+                        children[i].color = Color.red;
+                    }
                 }
-            }
         }
     }
 
@@ -253,11 +266,13 @@ public class PlayerController : MonoBehaviour {
         if (crosshair.activeSelf) {
             if (!isReeling) {
                 if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, hookRange)) {
-                    hookPlaced = true;
-                    bullet.SetActive(true);
-                    bullet.transform.position = hit.point;
-                    laser = laser.GetComponent<LineRenderer>();
-                    laser.gameObject.SetActive(true);
+                    if (hit.transform.tag == "Building") {
+                        hookPlaced = true;
+                        bullet.SetActive(true);
+                        bullet.transform.position = hit.point;
+                        laser = laser.GetComponent<LineRenderer>();
+                        laser.gameObject.SetActive(true);
+                    }
                 }
             }
         }
@@ -295,6 +310,11 @@ public class PlayerController : MonoBehaviour {
     public static void respawnPlayer(Vector3 respawnPos) {
         moveDirection = Vector3.zero;
         controller.transform.position = respawnPos;
+    }
+
+    public static void respawnPlayer() {
+        moveDirection = Vector3.zero;
+        controller.transform.position = respawnPoint;
     }
 
 }

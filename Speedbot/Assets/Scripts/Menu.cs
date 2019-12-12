@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Menu : MonoBehaviour
-{
+public class Menu : MonoBehaviour {
+
+    private const string LEVEL_ONE = "LevelOne";
+    private const string LEVEL_TWO = "LevelTwo";
+    private const string LEVEL_THREE = "LevelThree";
+    private const string LEVEL_FOUR = "LevelFour";
 
     public GameObject FindInActiveObjectByName(string name)
     {
@@ -22,9 +26,30 @@ public class Menu : MonoBehaviour
         return null;
     }
 
+    void Start() {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
     public void StartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
+    }
+
+    public void StartLevelOne() {
+        SceneManager.LoadScene(LEVEL_ONE);
+    }
+    
+    public void StartLevelTwo() {
+        SceneManager.LoadScene(LEVEL_TWO);
+    }
+
+    public void StartLevelThree() {
+        SceneManager.LoadScene(LEVEL_THREE);
+    }
+
+    public void StartLevelFour() {
+        SceneManager.LoadScene(LEVEL_FOUR);
     }
 
     public void OpenLevelMenu()

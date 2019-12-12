@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class TutorialTriggers : MonoBehaviour {
+
+    private const string MENU = "MainMenu";
+    private const string NEXT_LEVEL = "LevelOne";
 
     public GameObject triggers;
     public GameObject textTriggers;
@@ -40,6 +44,12 @@ public class TutorialTriggers : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            SceneManager.LoadScene(MENU);
+        }
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            SceneManager.LoadScene(NEXT_LEVEL);
+        }
         respawnTrigger();
         switch(textTriggerIndex) {
             case 0:
