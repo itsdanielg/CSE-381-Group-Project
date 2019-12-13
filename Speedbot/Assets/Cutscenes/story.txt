@@ -1,0 +1,5 @@
+30 years ago, a utopian society was established under the rule of the city's leader, RR-19. Though his appearance is unknown among the masses, his machine creations closely resemble his ideal society. These machines, which are prototypes of his early inventions, are scattered across the city to ensure the safety and protection of its citizens.
+
+However, a lone machine who has broken free of RR-19's programming has managed to see through the deception of his ideal society. Realizing that the city will soon turn into a dystopia in the near future, the lone machine tries everything in its power to escape from its leader's commands.
+
+You are now tasked to control this lone machine, who has chosen to go by its codename B-055. Use what you have learned to ensure that this machine does not fail to escape the city before RR-19 shuts down all machines when the countdown ends. It will not be easy however, as prototypes under the command of the leader will do everything in their power to make sure you do not leave. Good luck!

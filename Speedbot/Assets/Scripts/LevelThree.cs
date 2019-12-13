@@ -10,7 +10,7 @@ public class LevelThree : MonoBehaviour {
     private const string MENU = "MainMenu";
     private const string CURRENT_LEVEL = "LevelThree";
     private const string NEXT_LEVEL = "LevelFour";
-    private const float LEVEL_TIME = 80.0f;
+    private const float LEVEL_TIME = 180.0f;
     private const float OUT_OF_BOUNDS_DEPTH = -30f;
 
     // EVERYTHING ELSE REMAINS THE SAME FOR EACH LEVEL

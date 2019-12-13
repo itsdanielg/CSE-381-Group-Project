@@ -9,8 +9,8 @@ public class LevelFour : MonoBehaviour {
     // CONSTANTS CAN BE CHANGED DEPENDING ON LEVEL
     private const string MENU = "MainMenu";
     private const string CURRENT_LEVEL = "LevelFour";
-    private const float LEVEL_TIME = 60.0f;
-    private const float OUT_OF_BOUNDS_DEPTH = -30f;
+    private const float LEVEL_TIME = 300.0f;
+    private const float OUT_OF_BOUNDS_DEPTH = -60f;
 
     // EVERYTHING ELSE REMAINS THE SAME FOR EACH LEVEL
 

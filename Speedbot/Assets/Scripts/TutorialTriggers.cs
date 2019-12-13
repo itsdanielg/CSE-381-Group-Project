@@ -7,7 +7,7 @@ using TMPro;
 public class TutorialTriggers : MonoBehaviour {
 
     private const string MENU = "MainMenu";
-    private const string NEXT_LEVEL = "LevelOne";
+    private const string NEXT_LEVEL = "Cutscene";
 
     public GameObject triggers;
     public GameObject textTriggers;
