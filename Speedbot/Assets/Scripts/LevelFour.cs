@@ -1,13 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using TMPro;
 
 public class LevelFour : MonoBehaviour {
 
     // CONSTANTS CAN BE CHANGED DEPENDING ON LEVEL
-    private const string MENU = "MainMenu";
     private const string CURRENT_LEVEL = "LevelFour";
     private const float LEVEL_TIME = 300.0f;
     private const float OUT_OF_BOUNDS_DEPTH = -60f;
@@ -16,6 +14,10 @@ public class LevelFour : MonoBehaviour {
 
     public GameObject checkpoints;
     public CharacterController controller;
+    public AudioSource defeat;
+    public AudioSource victory;
+    public AudioSource bgm;
+    public PlayerController playerController;
 
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI gameoverText;
@@ -35,7 +37,7 @@ public class LevelFour : MonoBehaviour {
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            SceneManager.LoadScene(MENU);
+            LevelChanger.fadeToMenu();
         }
         respawnTrigger();
         if (!levelComplete) {
@@ -66,16 +68,25 @@ public class LevelFour : MonoBehaviour {
     }
 
     void levelCompleted() {
+        if (controller.gameObject.activeSelf) {
+            bgm.Stop();
+            victory.Play();
+        }
+        controller.gameObject.SetActive(false);
         if (Input.GetKeyDown(KeyCode.Return)) {
-            SceneManager.LoadScene(CURRENT_LEVEL);
+            LevelChanger.fadeToNextLevel(CURRENT_LEVEL);
         }
     }
 
     void gameOver() {
+        if (controller.gameObject.activeSelf) {
+            defeat.Play();
+        }
+        controller.gameObject.SetActive(false);
         gameoverText.gameObject.SetActive(true);
         restartText.gameObject.SetActive(true);
         if (Input.GetKeyDown(KeyCode.Return)) {
-            SceneManager.LoadScene(CURRENT_LEVEL);
+            LevelChanger.fadeToNextLevel(CURRENT_LEVEL);
         }
     }
 

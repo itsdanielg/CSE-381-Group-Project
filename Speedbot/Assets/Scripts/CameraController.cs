@@ -24,6 +24,17 @@ public class CameraController : MonoBehaviour {
     ////////////////////////////////////////////////// LATE UPDATE //////////////////////////////////////////////////
     void LateUpdate() {
 
+        // SENSITIVTY CONTROLS
+        if (Input.GetKey(".")) {
+            mouseSensitivity += 0.05f;
+        }
+        if (Input.GetKey(",")) {
+            mouseSensitivity -= 0.05f;
+            if (mouseSensitivity < 0.05f) {
+                mouseSensitivity = 0.05f;
+            }
+        }
+
         // SET LOOK AT POSITION OF CAMERA (ABOVE PLAYER HEAD)
         lookAt.position = player.position + new Vector3(0, LOOK_AT_Y_OFFSET, 0);
 

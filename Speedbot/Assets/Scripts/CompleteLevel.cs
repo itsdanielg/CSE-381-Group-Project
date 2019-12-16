@@ -5,6 +5,8 @@ using TMPro;
 
 public class CompleteLevel : MonoBehaviour {
 
+    public AudioSource audio;
+
     public TextMeshProUGUI completeText;
     public TextMeshProUGUI continueText;
 
@@ -16,6 +18,7 @@ public class CompleteLevel : MonoBehaviour {
 
     void OnTriggerEnter(Collider player) {
         if (player.CompareTag("Player")) {
+            audio.Play();
             completeText.gameObject.SetActive(true);
             continueText.gameObject.SetActive(true);
             LevelOne.levelComplete = true;

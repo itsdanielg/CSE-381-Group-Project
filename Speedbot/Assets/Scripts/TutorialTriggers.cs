@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using TMPro;
 
 public class TutorialTriggers : MonoBehaviour {
@@ -14,6 +13,7 @@ public class TutorialTriggers : MonoBehaviour {
     private RaycastHit hit;
     public Camera camera;
     public CharacterController controller;
+    
     public TextMeshProUGUI timer;
     public GameObject completeLevel;
 
@@ -45,10 +45,10 @@ public class TutorialTriggers : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            SceneManager.LoadScene(MENU);
+            LevelChanger.fadeToMenu();
         }
         if (Input.GetKeyDown(KeyCode.Return)) {
-            SceneManager.LoadScene(NEXT_LEVEL);
+            LevelChanger.fadeToNextLevel(NEXT_LEVEL);
         }
         respawnTrigger();
         switch(textTriggerIndex) {
@@ -161,10 +161,6 @@ public class TutorialTriggers : MonoBehaviour {
         
         textTriggers.transform.GetChild(textTriggerIndex).gameObject.SetActive(true);
         textTriggers.transform.GetChild(textTriggerIndex-1).gameObject.SetActive(false);
-    }
-
-    void gameOver() {
-
     }
 
 }

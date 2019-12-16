@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SpeedBoost : MonoBehaviour {
 
+    public AudioSource audio;
+
     private float respawnTime = 2f;
     private float speedBoostDuration = 2.0f;
     private float speedBoostMultiplier = 2.2f;
@@ -13,6 +15,7 @@ public class SpeedBoost : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider player) {
+        audio.Play();
         if (player.CompareTag("Player")) {
             StartCoroutine(PickUp(player));
         }

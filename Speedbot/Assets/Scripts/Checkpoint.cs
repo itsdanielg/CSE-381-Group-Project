@@ -5,6 +5,7 @@ using TMPro;
 
 public class Checkpoint : MonoBehaviour {
 
+    public AudioSource audio;
     public TextMeshProUGUI checkpointText;
 
     private bool triggered;
@@ -15,6 +16,7 @@ public class Checkpoint : MonoBehaviour {
         fadeRate = 10f;
         alpha = 190f;
         checkpointText.color = new Color32(255, 255, 255, 0);
+        checkpointText.gameObject.SetActive(false);
     }
 
     void Update() {
@@ -31,9 +33,11 @@ public class Checkpoint : MonoBehaviour {
     
     void OnTriggerEnter(Collider player) {
         if (player.CompareTag("Player")) {
+            audio.Play();
             PlayerController.respawnPoint = transform.position;
             PlayerController.respawnPoint.y += 2.0f;
             checkpointText.color = new Color32(255, 255, 255, (byte)((int)alpha));
+            checkpointText.gameObject.SetActive(true);
             triggered = true;
         }
     }

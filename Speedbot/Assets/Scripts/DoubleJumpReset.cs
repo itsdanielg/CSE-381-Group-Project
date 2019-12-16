@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DoubleJumpReset : MonoBehaviour {
 
+    public AudioSource audio;
+
     private float respawnTime = 2f;
 
     void Update() {
@@ -11,6 +13,7 @@ public class DoubleJumpReset : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider player) {
+        audio.Play();
         if (player.CompareTag("Player")) {
             StartCoroutine(PickUp(player));
         }

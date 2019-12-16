@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Story : MonoBehaviour {
 
@@ -10,10 +9,10 @@ public class Story : MonoBehaviour {
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            SceneManager.LoadScene(MENU);
+            LevelChanger.fadeToMenu();
         }
         if (Input.GetKeyDown(KeyCode.Return)) {
-            SceneManager.LoadScene(NEXT_LEVEL);
+            LevelChanger.fadeToNextLevel(NEXT_LEVEL);
         }
     }
 

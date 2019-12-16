@@ -27,6 +27,9 @@ public class PlayerController : MonoBehaviour {
     public GameObject crosshair;
     public GameObject bullet;
     public LineRenderer laser;
+    public AudioSource shootSound;
+    public AudioSource reelSound;
+    public AudioSource deathSound;
 
     public static int currentJump;
     public static float boostMultiplier = 1.0f;
@@ -67,6 +70,7 @@ public class PlayerController : MonoBehaviour {
         }
         // GET MOUSE WHEEL EVENT ONLY IF HOOK IS PLACED AND WHEEL IS SCROLLED QUICKLY
         if ((Input.mouseScrollDelta.y < -HOOK_SENSITIVITY || Input.mouseScrollDelta.y > HOOK_SENSITIVITY) && hookPlaced) {
+            reelSound.Play();
             isReeling = true;
         }
         // THEN CONTINOUSLY UPDATE LASER
@@ -88,6 +92,7 @@ public class PlayerController : MonoBehaviour {
 
         // MANUALLY RESPAWN
         if (Input.GetKeyDown("r")) {
+            deathSound.Play();
             respawnPlayer(respawnPoint);
         }
 
@@ -267,6 +272,7 @@ public class PlayerController : MonoBehaviour {
             if (!isReeling) {
                 if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, hookRange)) {
                     if (hit.transform.tag == "Building") {
+                        shootSound.Play();
                         hookPlaced = true;
                         bullet.SetActive(true);
                         bullet.transform.position = hit.point;
@@ -293,6 +299,7 @@ public class PlayerController : MonoBehaviour {
             isRolling = false;
         }
         else {
+            reelSound.Stop();
             hookPlaced = false;
             isReeling = false;
             bullet.SetActive(false);

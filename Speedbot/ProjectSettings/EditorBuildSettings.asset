@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Tutorial.unity
     guid: 3d122a457b866fb43a596ac95c9c111b
   - enabled: 1
+    path: Assets/Scenes/Cutscene.unity
+    guid: 58c4d0f85438b7b41b503dcf486868dd
+  - enabled: 1
     path: Assets/Scenes/LevelOne.unity
     guid: 499bb7de70639f540b57aff622bd4270
   - enabled: 1

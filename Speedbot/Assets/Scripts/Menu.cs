@@ -1,7 +1,6 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour {
 
@@ -31,25 +30,24 @@ public class Menu : MonoBehaviour {
         Cursor.lockState = CursorLockMode.None;
     }
 
-    public void StartGame()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
+    public void StartGame() {
+        LevelChanger.fadeToNextLevel("Tutorial");
     }
 
     public void StartLevelOne() {
-        SceneManager.LoadScene(LEVEL_ONE);
+        LevelChanger.fadeToNextLevel(LEVEL_ONE);
     }
     
     public void StartLevelTwo() {
-        SceneManager.LoadScene(LEVEL_TWO);
+        LevelChanger.fadeToNextLevel(LEVEL_TWO);
     }
 
     public void StartLevelThree() {
-        SceneManager.LoadScene(LEVEL_THREE);
+        LevelChanger.fadeToNextLevel(LEVEL_THREE);
     }
 
     public void StartLevelFour() {
-        SceneManager.LoadScene(LEVEL_FOUR);
+        LevelChanger.fadeToNextLevel(LEVEL_FOUR);
     }
 
     public void OpenLevelMenu()

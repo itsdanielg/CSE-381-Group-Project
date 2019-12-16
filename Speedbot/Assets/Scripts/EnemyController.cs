@@ -9,6 +9,7 @@ public class EnemyController : MonoBehaviour {
         public GameObject enemyBullet;
         public Vector3 playerPos;
         public Vector3 originalPos;
+
         public float maxDistance;
         public bool dead;
 
@@ -33,6 +34,7 @@ public class EnemyController : MonoBehaviour {
 
     public GameObject player;
     public GameObject enemyBullet;
+    public AudioSource bulletSound;
 
     public float maxDistanceDifference;
     public float fireRatePerSecond;
@@ -71,6 +73,7 @@ public class EnemyController : MonoBehaviour {
 
     void shootBullet(Vector3 playerPos) {
         if (timeSinceShoot >= 1.0/fireRatePerSecond) {
+            bulletSound.Play();
             timeSinceShoot = 0;
             GameObject bulletClone = Instantiate(enemyBullet, enemyBullet.transform.position, enemyBullet.transform.rotation);
             bulletClone.SetActive(true);
