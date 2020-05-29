@@ -73,7 +73,7 @@ public class EnemyController : MonoBehaviour {
 
     void shootBullet(Vector3 playerPos) {
         if (timeSinceShoot >= 1.0/fireRatePerSecond) {
-            bulletSound.volume = PlayerPrefs.GetFloat("Sound");
+            bulletSound.volume = PlayerPrefs.GetFloat("Sound")/100.0f;
             bulletSound.Play();
             timeSinceShoot = 0;
             GameObject bulletClone = Instantiate(enemyBullet, enemyBullet.transform.position, enemyBullet.transform.rotation);
