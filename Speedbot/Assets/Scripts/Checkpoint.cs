@@ -36,7 +36,7 @@ public class Checkpoint : MonoBehaviour {
             audio.volume = PlayerPrefs.GetFloat("Sound");
             audio.Play();
             PlayerController.respawnPoint = transform.position;
-            PlayerController.respawnPoint.y += 2.0f;
+            PlayerController.respawnPoint.y += 5.0f;
             checkpointText.color = new Color32(255, 255, 255, (byte)((int)alpha));
             checkpointText.gameObject.SetActive(true);
             triggered = true;

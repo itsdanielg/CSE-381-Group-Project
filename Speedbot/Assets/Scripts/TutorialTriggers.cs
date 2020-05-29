@@ -5,12 +5,10 @@ using TMPro;
 
 public class TutorialTriggers : MonoBehaviour {
 
-    private const string MENU = "MainMenu";
     private const string NEXT_LEVEL = "Cutscene";
 
     public GameObject triggers;
     public GameObject textTriggers;
-    private RaycastHit hit;
     public Camera camera;
     public CharacterController controller;
     
@@ -21,7 +19,6 @@ public class TutorialTriggers : MonoBehaviour {
     private int textTriggerIndex;
     private bool switchMode;
     private IEnumerator waitMessage;
-    private Vector3 respawnPoint;
     private Vector3 cameraSpawn;
     
 
@@ -29,13 +26,14 @@ public class TutorialTriggers : MonoBehaviour {
     
     // Start is called before the first frame update
     void Start() {
+        OptionInputs.NEXT_LEVEL = NEXT_LEVEL;
         cameraSpawn = new Vector3(0, 4, -10);
         triggerIndex = 0;
         textTriggerIndex = 0;
         switchMode = false;
         initText();
-        textTriggers.transform.GetChild(0).gameObject.SetActive(true);
-        respawnPoint = new Vector3(0, 5, 0);
+        textTriggers.transform.GetChild(5).gameObject.SetActive(true);
+        PlayerController.respawnPoint = new Vector3(0, 5, 0);
         waitMessage = waitText();
         timer.gameObject.SetActive(false);
         completeLevel.SetActive(false);
@@ -44,13 +42,6 @@ public class TutorialTriggers : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            LevelChanger.fadeToMenu();
-        }
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            LevelChanger.fadeToNextLevel(NEXT_LEVEL);
-        }
-        respawnTrigger();
         switch(textTriggerIndex) {
             case 0:
                 if (Vector3.Distance(camera.transform.position, cameraSpawn) > 12) {
@@ -108,19 +99,13 @@ public class TutorialTriggers : MonoBehaviour {
                 if (currentTime <= 0) {
                     currentTime = 0;
                     textTriggerIndex += 2;
-                    textTriggers.transform.GetChild(textTriggerIndex).gameObject.SetActive(true);
-                    textTriggers.transform.GetChild(textTriggerIndex-2).gameObject.SetActive(false);
+                    textTriggers.transform.GetChild(textTriggerIndex+5).gameObject.SetActive(true);
+                    textTriggers.transform.GetChild(textTriggerIndex+3).gameObject.SetActive(false);
                 }
                 checkTrigger();
                 break;
             default:
                 break;
-        }
-    }
-
-    void respawnTrigger() {
-        if (controller.transform.position.y < -30) {
-            PlayerController.respawnPlayer(respawnPoint);
         }
     }
 
@@ -131,6 +116,7 @@ public class TutorialTriggers : MonoBehaviour {
     }
 
     void updateTimer() {
+        if (OptionInputs.gamePaused) return;
         currentTime -= Time.deltaTime;
         timer.text = "TIME REMAINING: " + currentTime.ToString("F");
     }
@@ -140,8 +126,8 @@ public class TutorialTriggers : MonoBehaviour {
         if (!trigger.gameObject.activeSelf) {
             triggerIndex++;
             displayText();
-            respawnPoint = trigger.position;
-            respawnPoint.y += 5;
+            PlayerController.respawnPoint = trigger.position;
+            PlayerController.respawnPoint.y += 5.0f;
         }
         if (textTriggerIndex == 14 && !switchMode) {
             switchMode = true;
@@ -152,15 +138,14 @@ public class TutorialTriggers : MonoBehaviour {
 
     void displayText() {
         textTriggerIndex++;
-        textTriggers.transform.GetChild(textTriggerIndex).gameObject.SetActive(true);
-        textTriggers.transform.GetChild(textTriggerIndex-1).gameObject.SetActive(false);
+        textTriggers.transform.GetChild(textTriggerIndex+5).gameObject.SetActive(true);
+        textTriggers.transform.GetChild(textTriggerIndex+4).gameObject.SetActive(false);
     }
 
     IEnumerator waitText() {
         yield return new WaitForSeconds(2.5f);
-        
-        textTriggers.transform.GetChild(textTriggerIndex).gameObject.SetActive(true);
-        textTriggers.transform.GetChild(textTriggerIndex-1).gameObject.SetActive(false);
+        textTriggers.transform.GetChild(textTriggerIndex+5).gameObject.SetActive(true);
+        textTriggers.transform.GetChild(textTriggerIndex+4).gameObject.SetActive(false);
     }
 
 }

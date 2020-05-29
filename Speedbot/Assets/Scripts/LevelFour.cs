@@ -7,7 +7,6 @@ public class LevelFour : MonoBehaviour {
 
     // CONSTANTS CAN BE CHANGED DEPENDING ON LEVEL
     private const float LEVEL_TIME = 300.0f;
-    private const float OUT_OF_BOUNDS_DEPTH = -60f;
 
     // EVERYTHING ELSE REMAINS THE SAME FOR EACH LEVEL
 
@@ -35,7 +34,6 @@ public class LevelFour : MonoBehaviour {
     }
 
     void Update() {
-        respawnTrigger();
         if (!levelComplete) {
             updateTimer();
         }
@@ -46,12 +44,6 @@ public class LevelFour : MonoBehaviour {
             else {
                 levelCompleted();
             }
-        }
-    }
-
-    void respawnTrigger() {
-        if (controller.transform.position.y < OUT_OF_BOUNDS_DEPTH) {
-            PlayerController.respawnPlayer();
         }
     }
 

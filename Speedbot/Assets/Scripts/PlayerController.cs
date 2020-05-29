@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour {
     public static int currentJump;
     public static float boostMultiplier = 1.0f;
     public static float hookRange = 70;
+    public static bool isDead = false;
     
     public static Vector3 respawnPoint;
     private static Vector3 moveDirection;
@@ -70,6 +71,12 @@ public class PlayerController : MonoBehaviour {
             Cursor.lockState = CursorLockMode.Locked;
         }
 
+        if (isDead) {
+            respawnPlayer();
+            isDead = false;
+            return;
+        }
+
         // GET LEFT MOUSE CLICK EVENT
         if (Input.GetMouseButtonDown(0)) {
             shootEvent();
@@ -97,15 +104,14 @@ public class PlayerController : MonoBehaviour {
         }
         // ELSE LISTEN TO USER INPUT
         else {
+            if (isDead) return;
             updateMovement();       // UPDATE PLAYER MOVEMENT
             updateRotation();       // ROTATE MOVING PLAYER BASED ON CAMERA DIRECTION
         }
 
         // MANUALLY RESPAWN
         if (Input.GetKeyDown("r")) {
-            deathSound.volume = PlayerPrefs.GetFloat("Sound")/100.0f;
-            deathSound.Play();
-            respawnPlayer(respawnPoint);
+            isDead = true;
         }
 
         // LASTLY UPDATE MODEL ANIMATIONS
@@ -327,14 +333,15 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public static void respawnPlayer(Vector3 respawnPos) {
-        moveDirection = Vector3.zero;
-        controller.transform.position = respawnPos;
-    }
-
-    public static void respawnPlayer() {
+    public void respawnPlayer() {
+        deathSound.volume = PlayerPrefs.GetFloat("Sound")/100.0f;
+        deathSound.Play();
         moveDirection = Vector3.zero;
         controller.transform.position = respawnPoint;
+        hookPlaced = false;
+        isReeling = false;
+        bullet.SetActive(false);
+        laser.gameObject.SetActive(false);
     }
 
 }
