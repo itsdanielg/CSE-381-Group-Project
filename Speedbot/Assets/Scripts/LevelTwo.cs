@@ -7,7 +7,7 @@ public class LevelTwo : MonoBehaviour {
 
     // CONSTANTS CAN BE CHANGED DEPENDING ON LEVEL
     private const string NEXT_LEVEL = "LevelThree";
-    private const float LEVEL_TIME = 100.0f;
+    private const float LEVEL_TIME = 180.0f;
 
     // EVERYTHING ELSE REMAINS THE SAME FOR EACH LEVEL
 
