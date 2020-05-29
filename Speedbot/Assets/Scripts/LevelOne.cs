@@ -6,7 +6,6 @@ using TMPro;
 public class LevelOne : MonoBehaviour {
 
     // CONSTANTS CAN BE CHANGED DEPENDING ON LEVEL
-    private const string CURRENT_LEVEL = "LevelOne";
     private const string NEXT_LEVEL = "LevelTwo";
     private const float LEVEL_TIME = 120.0f;
     private const float OUT_OF_BOUNDS_DEPTH = -30f;
@@ -31,12 +30,10 @@ public class LevelOne : MonoBehaviour {
         restartText.gameObject.SetActive(false);
         levelComplete = false;
         currentTime = LEVEL_TIME;
+        OptionInputs.NEXT_LEVEL = NEXT_LEVEL;
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            LevelChanger.fadeToMenu();
-        }
         respawnTrigger();
         if (!levelComplete) {
             updateTimer();
@@ -58,6 +55,7 @@ public class LevelOne : MonoBehaviour {
     }
 
     void updateTimer() {
+        if (OptionInputs.gamePaused) return;
         currentTime -= Time.deltaTime;
         timerText.text = "TIME REMAINING: " + currentTime.ToString("F");
         if (currentTime <= 0) {
@@ -67,21 +65,16 @@ public class LevelOne : MonoBehaviour {
 
     void levelCompleted() {
         controller.gameObject.SetActive(false);
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            LevelChanger.fadeToNextLevel(NEXT_LEVEL);
-        }
     }
 
     void gameOver() {
         if (controller.gameObject.activeSelf) {
+            defeat.volume = PlayerPrefs.GetFloat("Sound")/100.0f;
             defeat.Play();
         }
         gameoverText.gameObject.SetActive(true);
         restartText.gameObject.SetActive(true);
         controller.gameObject.SetActive(false);
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            LevelChanger.fadeToNextLevel(CURRENT_LEVEL);
-        }
     }
 
 }

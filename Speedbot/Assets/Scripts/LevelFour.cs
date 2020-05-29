@@ -6,7 +6,6 @@ using TMPro;
 public class LevelFour : MonoBehaviour {
 
     // CONSTANTS CAN BE CHANGED DEPENDING ON LEVEL
-    private const string CURRENT_LEVEL = "LevelFour";
     private const float LEVEL_TIME = 300.0f;
     private const float OUT_OF_BOUNDS_DEPTH = -60f;
 
@@ -17,7 +16,6 @@ public class LevelFour : MonoBehaviour {
     public AudioSource defeat;
     public AudioSource victory;
     public AudioSource bgm;
-    public PlayerController playerController;
 
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI gameoverText;
@@ -33,12 +31,10 @@ public class LevelFour : MonoBehaviour {
         restartText.gameObject.SetActive(false);
         levelComplete = false;
         currentTime = LEVEL_TIME;
+        OptionInputs.NEXT_LEVEL = "LevelFour";
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            LevelChanger.fadeToMenu();
-        }
         respawnTrigger();
         if (!levelComplete) {
             updateTimer();
@@ -60,6 +56,7 @@ public class LevelFour : MonoBehaviour {
     }
 
     void updateTimer() {
+        if (OptionInputs.gamePaused) return;
         currentTime -= Time.deltaTime;
         timerText.text = "TIME REMAINING: " + currentTime.ToString("F");
         if (currentTime <= 0) {
@@ -70,24 +67,20 @@ public class LevelFour : MonoBehaviour {
     void levelCompleted() {
         if (controller.gameObject.activeSelf) {
             bgm.Stop();
+            victory.volume = PlayerPrefs.GetFloat("Music")/100.0f;
             victory.Play();
         }
         controller.gameObject.SetActive(false);
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            LevelChanger.fadeToNextLevel(CURRENT_LEVEL);
-        }
     }
 
     void gameOver() {
         if (controller.gameObject.activeSelf) {
+            defeat.volume = PlayerPrefs.GetFloat("Sound")/100.0f;
             defeat.Play();
         }
         controller.gameObject.SetActive(false);
         gameoverText.gameObject.SetActive(true);
         restartText.gameObject.SetActive(true);
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            LevelChanger.fadeToNextLevel(CURRENT_LEVEL);
-        }
     }
 
 }

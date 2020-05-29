@@ -17,6 +17,9 @@ public class OptionInputs : MonoBehaviour {
             gamePaused = !gamePaused;
             optionsMenu.SetActive(!optionsMenu.activeSelf);
         }
+        if (Input.GetKeyDown(KeyCode.T)) {
+            LevelChanger.fadeToRestart();
+        }
         if (Input.GetKeyDown(KeyCode.Return)) {
             LevelChanger.fadeToNextLevel(NEXT_LEVEL);
         }

@@ -6,7 +6,6 @@ using TMPro;
 public class LevelThree : MonoBehaviour {
 
     // CONSTANTS CAN BE CHANGED DEPENDING ON LEVEL
-    private const string CURRENT_LEVEL = "LevelThree";
     private const string NEXT_LEVEL = "LevelFour";
     private const float LEVEL_TIME = 180.0f;
     private const float OUT_OF_BOUNDS_DEPTH = -30f;
@@ -16,7 +15,6 @@ public class LevelThree : MonoBehaviour {
     public GameObject checkpoints;
     public CharacterController controller;
     public AudioSource defeat;
-    public PlayerController playerController;
 
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI gameoverText;
@@ -32,12 +30,10 @@ public class LevelThree : MonoBehaviour {
         restartText.gameObject.SetActive(false);
         levelComplete = false;
         currentTime = LEVEL_TIME;
+        OptionInputs.NEXT_LEVEL = NEXT_LEVEL;
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            LevelChanger.fadeToMenu();
-        }
         respawnTrigger();
         if (!levelComplete) {
             updateTimer();
@@ -59,6 +55,7 @@ public class LevelThree : MonoBehaviour {
     }
 
     void updateTimer() {
+        if (OptionInputs.gamePaused) return;
         currentTime -= Time.deltaTime;
         timerText.text = "TIME REMAINING: " + currentTime.ToString("F");
         if (currentTime <= 0) {
@@ -68,21 +65,16 @@ public class LevelThree : MonoBehaviour {
 
     void levelCompleted() {
         controller.gameObject.SetActive(false);
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            LevelChanger.fadeToNextLevel(NEXT_LEVEL);
-        }
     }
 
     void gameOver() {
         if (controller.gameObject.activeSelf) {
+            defeat.volume = PlayerPrefs.GetFloat("Sound")/100.0f;
             defeat.Play();
         }
         controller.gameObject.SetActive(false);
         gameoverText.gameObject.SetActive(true);
         restartText.gameObject.SetActive(true);
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            LevelChanger.fadeToNextLevel(CURRENT_LEVEL);
-        }
     }
 
 }
