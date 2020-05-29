@@ -5024,7 +5024,11 @@ MonoBehaviour:
   m_text: 'Game Over! You have failed to finish the rest of the tutorial.
 
 
-    Press ESC to return to the main menu...'
+    Press T to restart the tutorial...
+
+    Press ENTER to continue with the game...
+
+    Press BACKSPACE to return to the main menu...'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 672bc4c7d7db7de4591407fc2d919611, type: 2}
   m_sharedMaterial: {fileID: 3021675201171192113, guid: 672bc4c7d7db7de4591407fc2d919611,
@@ -5094,12 +5098,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 735459823}
-    characterCount: 103
+    characterCount: 185
     spriteCount: 0
-    spaceCount: 20
-    wordCount: 20
+    spaceCount: 33
+    wordCount: 33
     linkCount: 0
-    lineCount: 3
+    lineCount: 5
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -8145,7 +8149,9 @@ MonoBehaviour:
   m_text: 'Congratulations! You have completed the tutorial!
 
 
-    Press ENTER to move to the next level...
+    Press ENTER to continue with the game...
+
+    Press T to restart the tutorial...
 
     Press BACKSPACE to return to the main menu...'
   m_isRightToLeft: 0
@@ -8217,12 +8223,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1225207081}
-    characterCount: 137
+    characterCount: 172
     spriteCount: 0
-    spaceCount: 22
-    wordCount: 22
+    spaceCount: 28
+    wordCount: 28
     linkCount: 0
-    lineCount: 4
+    lineCount: 5
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0

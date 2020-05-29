@@ -338,6 +338,7 @@ public class PlayerController : MonoBehaviour {
         deathSound.Play();
         moveDirection = Vector3.zero;
         controller.transform.position = respawnPoint;
+        reelSound.Stop();
         hookPlaced = false;
         isReeling = false;
         bullet.SetActive(false);
