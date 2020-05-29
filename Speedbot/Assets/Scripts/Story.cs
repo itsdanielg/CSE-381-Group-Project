@@ -8,7 +8,7 @@ public class Story : MonoBehaviour {
     private const string NEXT_LEVEL = "LevelOne";
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        if (Input.GetKeyDown(KeyCode.M)) {
             LevelChanger.fadeToMenu();
         }
         if (Input.GetKeyDown(KeyCode.Return)) {

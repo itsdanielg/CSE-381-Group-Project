@@ -8,9 +8,9 @@ public class CameraController : MonoBehaviour {
     private const float minViewAngle = -70.0f;
     private const float maxViewAngle = 60.0f;
     private const float zoomOut = 10;
+    private float mouseSensitivity;
 
     public Transform player, lookAt;
-    public float mouseSensitivity;
 
     private Vector3 eulerRotation;
     
@@ -24,19 +24,20 @@ public class CameraController : MonoBehaviour {
     ////////////////////////////////////////////////// LATE UPDATE //////////////////////////////////////////////////
     void LateUpdate() {
 
-        // SENSITIVTY CONTROLS
-        if (Input.GetKey(".")) {
-            mouseSensitivity += 0.05f;
+        if (OptionInputs.gamePaused) {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            return;
         }
-        if (Input.GetKey(",")) {
-            mouseSensitivity -= 0.05f;
-            if (mouseSensitivity < 0.05f) {
-                mouseSensitivity = 0.05f;
-            }
+        else {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         // SET LOOK AT POSITION OF CAMERA (ABOVE PLAYER HEAD)
         lookAt.position = player.position + new Vector3(0, LOOK_AT_Y_OFFSET, 0);
+
+        mouseSensitivity = PlayerPrefs.GetFloat("Sensitivity");
 
         // GET DIRECTION VECTORS FROM MOUSE MOVEMENT
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;

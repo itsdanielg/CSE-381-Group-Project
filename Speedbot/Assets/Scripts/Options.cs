@@ -23,7 +23,7 @@ public class Options : MonoBehaviour {
             soundSlider.value = sound;
         }
         if (PlayerPrefs.HasKey("Sensitivity")) {
-            sound = PlayerPrefs.GetFloat("Sensitivity");
+            mouseSensitivity = PlayerPrefs.GetFloat("Sensitivity");
             sensitivitySlider.value = mouseSensitivity;
         }
     }
@@ -41,6 +41,18 @@ public class Options : MonoBehaviour {
     public void updateSensitivity(float newFloat) {
         mouseSensitivity = newFloat;
         PlayerPrefs.SetFloat("Sensitivity", mouseSensitivity);
+    }
+
+    public void gameBack() {
+        OptionInputs.gamePaused = false;
+    }
+
+    public void resetLevel() {
+        LevelChanger.fadeToRestart();
+    }
+
+    public void menuBack() {
+        LevelChanger.fadeToMenu();
     }
     
 }

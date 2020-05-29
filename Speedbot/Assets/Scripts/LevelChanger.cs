@@ -23,6 +23,11 @@ public class LevelChanger : MonoBehaviour {
         animator.SetTrigger("fadeOut");
     }
 
+    public static void fadeToRestart() {
+        nextScene = SceneManager.GetActiveScene().name;
+        animator.SetTrigger("fadeOut");
+    }
+
     public void onFadeComplete() {
         SceneManager.LoadScene(nextScene);
     }
