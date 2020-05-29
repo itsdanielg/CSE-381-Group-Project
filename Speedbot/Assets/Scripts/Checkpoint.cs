@@ -33,6 +33,7 @@ public class Checkpoint : MonoBehaviour {
     
     void OnTriggerEnter(Collider player) {
         if (player.CompareTag("Player")) {
+            audio.volume = PlayerPrefs.GetFloat("Sound");
             audio.Play();
             PlayerController.respawnPoint = transform.position;
             PlayerController.respawnPoint.y += 2.0f;

@@ -13,6 +13,7 @@ public class DoubleJumpReset : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider player) {
+        audio.volume = PlayerPrefs.GetFloat("Sound");
         audio.Play();
         if (player.CompareTag("Player")) {
             StartCoroutine(PickUp(player));

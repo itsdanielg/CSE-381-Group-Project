@@ -15,6 +15,7 @@ public class SpeedBoost : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider player) {
+        audio.volume = PlayerPrefs.GetFloat("Sound");
         audio.Play();
         if (player.CompareTag("Player")) {
             StartCoroutine(PickUp(player));
