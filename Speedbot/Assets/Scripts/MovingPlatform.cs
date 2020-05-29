@@ -15,10 +15,15 @@ public class MovingPlatform : MonoBehaviour {
     private Vector3 middlePos;
     private Vector3 firstPos;
     private Vector3 lastPos;
+    private CharacterController controller;
+    private Rigidbody rigidbody;
+
     private bool movingFirst;
     private bool movingLast;
 
     void Start() {
+        controller = null;
+        rigidbody = GetComponent<Rigidbody>();
         firstPos = lastPos = middlePos = transform.position;
         if (moveX) {
             firstPos.x -= maxDistanceTravel/2;
@@ -46,21 +51,40 @@ public class MovingPlatform : MonoBehaviour {
         transform.position = spawnPos;
     }
 
-    void Update() {
-        float step = travelSpeed * Time.deltaTime;
+    void FixedUpdate() {
+        Vector3 currentPos = transform.position;
+        Vector3 movePos = lastPos - firstPos;
         if (movingFirst) {
-            transform.position = Vector3.MoveTowards(transform.position, firstPos, step);
-            if (Vector3.Distance(transform.position, middlePos) >= maxDistanceTravel/2) {
+            movePos = -(movePos);
+            movePos = movePos.normalized * travelSpeed * Time.deltaTime;
+            rigidbody.MovePosition(currentPos + movePos);
+            if (Vector3.Distance(transform.position, lastPos) >= maxDistanceTravel) {
                 movingLast = true;
                 movingFirst = false;
             }
         }
         else {
-            transform.position = Vector3.MoveTowards(transform.position, lastPos, step);
-            if (Vector3.Distance(transform.position, middlePos) >= maxDistanceTravel/2) {
+            movePos = movePos.normalized * travelSpeed * Time.deltaTime;
+            rigidbody.MovePosition(currentPos + movePos);
+            if (Vector3.Distance(transform.position, firstPos) >= maxDistanceTravel) {
                 movingLast = false;
                 movingFirst = true;
             }
+        }
+        
+    }
+
+    void OnTriggerEnter(Collider player) {
+        if (player.CompareTag("Player")) {
+            controller = player.GetComponent<CharacterController>();
+        }
+    }
+
+    void OnTriggerStay(Collider player) {
+        if (player.CompareTag("Player")) {
+            PlayerController.currentJump = 0;
+            Vector3 vel = transform.GetComponent<Rigidbody>().velocity;
+            controller.Move(vel * Time.deltaTime);
         }
     }
 
