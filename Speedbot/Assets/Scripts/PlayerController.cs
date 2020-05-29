@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour {
     private const float DOUBLE_JUMP_HEIGHT_MULTIPLIER = 0.8f;
     private const float GRAVITY = -40.0f;
     private const float HOOK_SENSITIVITY = 1.0f;
+    private const float HOOK_TRAVEL_SPEED = 40.0f;
     private const int MAX_JUMPS = 2;
 
     public static CharacterController controller;
@@ -34,7 +35,6 @@ public class PlayerController : MonoBehaviour {
     public static int currentJump;
     public static float boostMultiplier = 1.0f;
     public static float hookRange = 70;
-    public float hookTravelSpeed;
     
     public static Vector3 respawnPoint;
     private static Vector3 moveDirection;
@@ -60,6 +60,16 @@ public class PlayerController : MonoBehaviour {
     ////////////////////////////////////////////////// UDPATE //////////////////////////////////////////////////
     void Update() {
 
+        if (OptionInputs.gamePaused) {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            return;
+        }
+        else {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
         // GET LEFT MOUSE CLICK EVENT
         if (Input.GetMouseButtonDown(0)) {
             shootEvent();
@@ -70,6 +80,7 @@ public class PlayerController : MonoBehaviour {
         }
         // GET MOUSE WHEEL EVENT ONLY IF HOOK IS PLACED AND WHEEL IS SCROLLED QUICKLY
         if ((Input.mouseScrollDelta.y < -HOOK_SENSITIVITY || Input.mouseScrollDelta.y > HOOK_SENSITIVITY) && hookPlaced) {
+            reelSound.volume = PlayerPrefs.GetFloat("Sound")/100.0f;
             reelSound.Play();
             isReeling = true;
         }
@@ -92,6 +103,7 @@ public class PlayerController : MonoBehaviour {
 
         // MANUALLY RESPAWN
         if (Input.GetKeyDown("r")) {
+            deathSound.volume = PlayerPrefs.GetFloat("Sound")/100.0f;
             deathSound.Play();
             respawnPlayer(respawnPoint);
         }
@@ -272,6 +284,7 @@ public class PlayerController : MonoBehaviour {
             if (!isReeling) {
                 if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, hookRange)) {
                     if (hit.transform.tag == "Building") {
+                        shootSound.volume = PlayerPrefs.GetFloat("Sound")/100.0f;
                         shootSound.Play();
                         hookPlaced = true;
                         bullet.SetActive(true);
@@ -287,7 +300,7 @@ public class PlayerController : MonoBehaviour {
     ////////////////////////////////////////////////// REEL EVENT //////////////////////////////////////////////////
     // REEL PLAYER ONTO TARGET PLACED
     void reelEvent() {
-        float step =  hookTravelSpeed * Time.deltaTime;
+        float step =  HOOK_TRAVEL_SPEED * Time.deltaTime;
         float distance = Vector3.Distance(controller.transform.position, bullet.transform.position);
         if (distance > 1) {
             controller.transform.position = Vector3.MoveTowards(controller.transform.position, bullet.transform.position, step);
